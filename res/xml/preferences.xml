@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:title="Login information">
+		<EditTextPreference android:title="@string/username" android:key="username"/>
+    	<EditTextPreference android:title="@string/password" android:key="password" android:inputType="textPassword"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Auto login option">
+    	<CheckBoxPreference android:title="When open" android:summary="Auto login when open this app" android:key="auto_startapp"/>
+    	<CheckBoxPreference android:title="When connect" android:summary="Auto login when connect to KMITL-WIFI" android:key="auto_wificonn"/>
+    </PreferenceCategory>
+</PreferenceScreen>
