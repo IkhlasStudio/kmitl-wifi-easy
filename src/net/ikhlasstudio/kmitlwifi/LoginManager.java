@@ -4,17 +4,19 @@ package net.ikhlasstudio.kmitlwifi;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.ikhlasstudio.kmitwifi.util.Logger;
 import net.ikhlasstudio.kmitwifi.util.LoginResult;
 import net.ikhlasstudio.kmitwifi.util.Util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
 public class LoginManager {
+    protected static final String LOG_TAG = "KWE-LoginManager";
+
     private String username;
     private String password;
     private static String testUrl = "http://www.kmitl.ac.th/";
@@ -38,11 +40,11 @@ public class LoginManager {
             return util.wifiState;
         }
 
-        Logger.i("begin doLogin");
+        Log.i(LOG_TAG, "begin doLogin");
 
         int responseCode;
         // get current status
-        Logger.i("get current status");
+        Log.v(LOG_TAG, "get current status");
         responseCode = getHttpStatus();
 
         if (responseCode == 200) { // OK
@@ -66,17 +68,17 @@ public class LoginManager {
             }
 
             // verifying login
-            Logger.i("verify login");
+            Log.v(LOG_TAG, "verify login");
             responseCode = getHttpStatus();
             if (responseCode != 200) {
-                Logger.i("http status not 200");
+                Log.d(LOG_TAG, "http status not 200");
                 return LoginResult.FAIL;
             } else {
                 return LoginResult.SUCCESS;
             }
 
         } else { // No 200 or 302
-            Logger.i("http status not 302 it is " + responseCode);
+            Log.v(LOG_TAG, "http status not 302 it is " + responseCode);
             if (responseCode == -2) {
                 return LoginResult.SOCKET_TIMEOUT;
             }
@@ -89,12 +91,12 @@ public class LoginManager {
         if (!util.isWifiConnect()) {
             return util.wifiState;
         }
-        Logger.i("begin doLogout");
+        Log.i(LOG_TAG, "begin doLogout");
 
         if (getHttpStatus(logoutUrl) == 200) {
             return LoginResult.LOGOUT_SUCCESS;
         } else {
-            Logger.i("logout failed");
+            Log.i(LOG_TAG, "logout failed");
             return LoginResult.FAIL;
         }
     }
@@ -114,10 +116,10 @@ public class LoginManager {
             responseCode = request.code();
         } catch (HttpRequestException e) {
             responseCode = -1;
-            Logger.i(e.getCause().getMessage());
+            Log.e(LOG_TAG, e.getCause().getMessage());
         }
 
-        Logger.i("getHttpStatus " + httpUrl + " response code is " + responseCode);
+        Log.v(LOG_TAG, "getHttpStatus " + httpUrl + " response code is " + responseCode);
         return responseCode;
     }
 

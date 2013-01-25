@@ -1,7 +1,6 @@
 
 package net.ikhlasstudio.kmitlwifi;
 
-import net.ikhlasstudio.kmitwifi.util.Logger;
 import net.ikhlasstudio.kmitwifi.util.LoginResult;
 import net.ikhlasstudio.kmitwifi.util.Util;
 import android.app.NotificationManager;
@@ -13,15 +12,17 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
 public class ConnectivityActionReceiver extends BroadcastReceiver {
+    protected static final String LOG_TAG = "KWE-ConnectivityActionReceiver";
     private Util util;
 
     @Override
     public void onReceive(Context context, Intent arg1) {
         final Context mcontext = context;
 
-        Logger.i("WiFi event");
+        Log.v(LOG_TAG, "WiFi event");
 
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
@@ -33,7 +34,7 @@ public class ConnectivityActionReceiver extends BroadcastReceiver {
         if (!util.isWifiConnect()) {
             return;
         }
-        Logger.i("KMITL-WiFi connected");
+        Log.i(LOG_TAG, "KMITL-WiFi connected");
 
         new Thread(new Runnable() {
 
@@ -45,7 +46,7 @@ public class ConnectivityActionReceiver extends BroadcastReceiver {
                 } catch (InterruptedException e) {
 
                 }
-                Logger.i("logining to KMITL-WIFI");
+                Log.v(LOG_TAG, "logining to KMITL-WiFi");
                 LoginResult rest = new LoginManager(mcontext).doLogin();
                 if (rest == LoginResult.SUCCESS || rest == LoginResult.ALREADY) {
                     Intent intent = new Intent(mcontext, MainActivity.class);
@@ -67,7 +68,7 @@ public class ConnectivityActionReceiver extends BroadcastReceiver {
                                     .getSystemService(Context.NOTIFICATION_SERVICE);
                     // mId allows you to update the notification later on.
                     mNotificationManager.notify(1234, mBuilder.build());
-                    Logger.i("notified");
+                    Log.i(LOG_TAG, "notified");
                 }
             }
         }).start();

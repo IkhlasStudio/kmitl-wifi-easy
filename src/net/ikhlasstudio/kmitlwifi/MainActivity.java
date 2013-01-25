@@ -1,7 +1,6 @@
 
 package net.ikhlasstudio.kmitlwifi;
 
-import net.ikhlasstudio.kmitwifi.util.Logger;
 import net.ikhlasstudio.kmitwifi.util.LoginResult;
 import net.ikhlasstudio.kmitwifi.util.Util;
 import android.app.ProgressDialog;
@@ -12,6 +11,7 @@ import android.graphics.PixelFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -22,6 +22,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockActivity implements OnClickListener {
+    protected static final String LOG_TAG = "KWE-MainActivity";
     private Button loginButton;
 
     @Override
@@ -32,12 +33,12 @@ public class MainActivity extends SherlockActivity implements OnClickListener {
         loginButton = (Button) findViewById(R.id.login_button);
         loginButton.setOnClickListener(this);
 
-        Logger.i("MainActivity started");
+        Log.i(LOG_TAG, "MainActivity started");
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(this);
         boolean autoOnStart = sp.getBoolean("auto_startapp", false);
         if (autoOnStart == true) {
-            Logger.i("auto login when start");
+            Log.i(LOG_TAG, "auto login when start");
             new LoginTask(this).execute(LoginManager.DO_LOGIN);
         }
     }
@@ -92,7 +93,7 @@ public class MainActivity extends SherlockActivity implements OnClickListener {
                 if ((new Util(MainActivity.this).isWifiConnect()) == false) {
                     return;
                 }
-                Logger.i("update button 's text");
+                Log.v(LOG_TAG, "update button 's text");
                 final int responseCode = LoginManager.getHttpStatus();
 
                 // runOnUiThread because we need to update UI
