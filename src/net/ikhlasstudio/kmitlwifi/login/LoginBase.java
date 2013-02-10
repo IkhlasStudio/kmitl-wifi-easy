@@ -12,8 +12,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 public abstract class LoginBase implements Loginable {
-    public static int DO_LOGIN = 1;
-    public static int DO_LOGOUT = 2;
+
     protected static String TEST_URL = "http://www.google.com/";
 
     protected Context context;
