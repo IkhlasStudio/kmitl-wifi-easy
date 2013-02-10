@@ -35,7 +35,7 @@ public class LoginManager {
         util = new Util(context);
     }
 
-    protected LoginResult doLogin() {
+    public LoginResult doLogin() {
         if (!util.isWifiConnect()) {
             return util.wifiState;
         }
@@ -87,7 +87,7 @@ public class LoginManager {
         }
     }
 
-    protected LoginResult doLogout() {
+    public LoginResult doLogout() {
         if (!util.isWifiConnect()) {
             return util.wifiState;
         }

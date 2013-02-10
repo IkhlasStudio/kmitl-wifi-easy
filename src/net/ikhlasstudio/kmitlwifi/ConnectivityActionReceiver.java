@@ -1,6 +1,7 @@
 
 package net.ikhlasstudio.kmitlwifi;
 
+import net.ikhlasstudio.kmitlwifi.activity.MainActivity;
 import net.ikhlasstudio.kmitwifi.util.LoginResult;
 import net.ikhlasstudio.kmitwifi.util.Util;
 import android.app.NotificationManager;

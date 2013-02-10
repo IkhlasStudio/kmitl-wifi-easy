@@ -1,6 +1,7 @@
 
-package net.ikhlasstudio.kmitlwifi;
+package net.ikhlasstudio.kmitlwifi.activity;
 
+import net.ikhlasstudio.kmitlwifi.R;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;

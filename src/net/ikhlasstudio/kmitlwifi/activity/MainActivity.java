@@ -1,6 +1,8 @@
 
-package net.ikhlasstudio.kmitlwifi;
+package net.ikhlasstudio.kmitlwifi.activity;
 
+import net.ikhlasstudio.kmitlwifi.LoginManager;
+import net.ikhlasstudio.kmitlwifi.R;
 import net.ikhlasstudio.kmitwifi.util.LoginResult;
 import net.ikhlasstudio.kmitwifi.util.Util;
 import android.app.ProgressDialog;
