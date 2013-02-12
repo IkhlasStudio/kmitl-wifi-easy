@@ -1,5 +1,5 @@
 
-package net.ikhlasstudio.kmitwifi.util;
+package net.ikhlasstudio.kmitlwifi.util;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -27,9 +27,6 @@ public class Util {
             case NOCONNECT_WIFI:
                 message = "No WiFi connection";
                 break;
-            case NOKMITL_WIFI:
-                message = "Not connect to KMITL-WiFi";
-                break;
             case WRONGINFO:
                 message = "Wrong username and/or password";
                 break;
@@ -38,9 +35,6 @@ public class Util {
                 break;
             case FAIL:
                 message = "System failed please try again";
-                break;
-            case SOCKET_TIMEOUT:
-                message = "Connection timeout please try again";
                 break;
             case LOGOUT_SUCCESS:
                 message = "Logout success";
@@ -54,7 +48,7 @@ public class Util {
         return message;
     }
 
-    public boolean isWifiConnect() {
+    public String getWifiSSID() {
         WifiManager wifiManager = (WifiManager) context
                 .getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
@@ -65,14 +59,10 @@ public class Util {
         NetworkInfo networkInfo = connectivityManager
                 .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-        if (ssid == null) {
-            wifiState = LoginResult.NOCONNECT_WIFI;
-            return false;
-        } else if (!ssid.startsWith("KMITL-WiFi") || !networkInfo.isConnected()) {
-            wifiState = LoginResult.NOKMITL_WIFI;
-            return false;
+        if (ssid != null && networkInfo.isConnected()) {
+            return ssid;
+        }else{
+            return "";
         }
-
-        return true;
     }
 }

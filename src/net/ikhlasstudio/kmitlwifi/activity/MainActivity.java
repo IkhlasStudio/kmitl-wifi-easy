@@ -1,22 +1,21 @@
 
 package net.ikhlasstudio.kmitlwifi.activity;
 
-import net.ikhlasstudio.kmitlwifi.LoginManager;
 import net.ikhlasstudio.kmitlwifi.R;
-import net.ikhlasstudio.kmitwifi.util.LoginResult;
-import net.ikhlasstudio.kmitwifi.util.Util;
+import net.ikhlasstudio.kmitlwifi.login.LoginFactory;
+import net.ikhlasstudio.kmitlwifi.login.Loginable;
+import net.ikhlasstudio.kmitlwifi.util.LoginResult;
+import net.ikhlasstudio.kmitlwifi.util.Util;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PixelFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.Button;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -24,7 +23,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockActivity implements OnClickListener {
-    protected static final String LOG_TAG = "KWE-MainActivity";
+    protected static final String LOG_TAG = "MainActivity";
     private Button loginButton;
 
     @Override
@@ -41,7 +40,7 @@ public class MainActivity extends SherlockActivity implements OnClickListener {
         boolean autoOnStart = sp.getBoolean("auto_startapp", false);
         if (autoOnStart == true) {
             Log.i(LOG_TAG, "auto login when start");
-            new LoginTask(this).execute(LoginManager.DO_LOGIN);
+            new LoginTask(this).execute(Loginable.DO_LOGIN);
         }
     }
 
@@ -71,19 +70,12 @@ public class MainActivity extends SherlockActivity implements OnClickListener {
     }
 
     @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        Window window = getWindow();
-        window.setFormat(PixelFormat.RGBA_8888);
-    }
-
-    @Override
     public void onClick(View v) {
         Button button = (Button) v;
         if (button.getText().equals(getResources().getString(R.string.login))) {
-            new LoginTask(this).execute(LoginManager.DO_LOGIN);
+            new LoginTask(this).execute(Loginable.DO_LOGIN);
         } else {
-            new LoginTask(this).execute(LoginManager.DO_LOGOUT);
+            new LoginTask(this).execute(Loginable.DO_LOGOUT);
         }
     }
 
@@ -92,17 +84,21 @@ public class MainActivity extends SherlockActivity implements OnClickListener {
 
             @Override
             public void run() {
-                if ((new Util(MainActivity.this).isWifiConnect()) == false) {
+                Log.v(LOG_TAG, "updateButtonText");
+                final Loginable loginner = LoginFactory.getInstance(MainActivity.this);
+                
+                if (loginner == null) {
                     return;
                 }
                 Log.v(LOG_TAG, "update button 's text");
-                final int responseCode = LoginManager.getHttpStatus();
+                
+                final boolean testResult = loginner.testInternetAccess();
 
                 // runOnUiThread because we need to update UI
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (responseCode == 200) {
+                        if (testResult) {
                             loginButton.setText(R.string.logout);
                         } else {
                             loginButton.setText(R.string.login);
@@ -116,9 +112,12 @@ public class MainActivity extends SherlockActivity implements OnClickListener {
     class LoginTask extends AsyncTask<Integer, Integer, LoginResult> {
         private Context context;
         private ProgressDialog progressDialog;
+        private Loginable Loginner;
 
         public LoginTask(Context context) {
+            Log.v(LOG_TAG, "LoginTask");
             this.context = context;
+            Loginner = LoginFactory.getInstance(context);
         }
 
         @Override
@@ -133,10 +132,14 @@ public class MainActivity extends SherlockActivity implements OnClickListener {
 
         @Override
         protected LoginResult doInBackground(Integer... method) {
-            if (method[0] == LoginManager.DO_LOGIN) {
-                return new LoginManager(context).doLogin();
+            if(Loginner == null){
+                return LoginResult.NOCONNECT_WIFI;
+            }
+            
+            if (method[0] == Loginable.DO_LOGIN) {
+                return Loginner.login();
             } else {
-                return new LoginManager(context).doLogout();
+                return Loginner.logout();
             }
         }
 

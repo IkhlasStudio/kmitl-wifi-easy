@@ -1,5 +1,5 @@
 
-package net.ikhlasstudio.kmitwifi.util;
+package net.ikhlasstudio.kmitlwifi.util;
 
 import java.util.Map;
 
@@ -12,14 +12,15 @@ public class HttpHelper {
     private static String LOG_TAG = "HttpHelper";
 
     public static int getHttpStatus(String httpUrl) {
-        HttpRequest request= get(httpUrl);
-        
-        if(request == null){
+        HttpRequest request = get(httpUrl);
+
+        if (request == null) {
             return -1;
-        }else{
+        } else {
+            Log.v(LOG_TAG + " getHttpStatus()", Integer.toString(request.code()));
             return request.code();
         }
-        
+
     }
 
     public static HttpRequest get(String httpUrl) {
@@ -31,7 +32,7 @@ public class HttpHelper {
             request.getConnection().setInstanceFollowRedirects(false);
             request.getConnection().setUseCaches(false);
         } catch (HttpRequestException e) {
-            Log.e(LOG_TAG, e.getCause().getMessage());
+            Log.e(LOG_TAG + " get()", e.getCause().getMessage());
         }
 
         return request;
@@ -43,10 +44,12 @@ public class HttpHelper {
             request = HttpRequest.post(httpUrl);
             request.trustAllCerts();
             request.trustAllHosts();
+            request.getConnection().setInstanceFollowRedirects(false);
+            request.getConnection().setUseCaches(false);
             request.form(params);
             request.created();
         } catch (HttpRequestException e) {
-            Log.e(LOG_TAG, e.getCause().getMessage());
+            Log.e(LOG_TAG + " post()", e.getCause().getMessage());
         }
 
         return request;

@@ -1,9 +1,11 @@
 
-package net.ikhlasstudio.kmitlwifi;
+package net.ikhlasstudio.kmitlwifi.receiver;
 
+import net.ikhlasstudio.kmitlwifi.R;
 import net.ikhlasstudio.kmitlwifi.activity.MainActivity;
-import net.ikhlasstudio.kmitwifi.util.LoginResult;
-import net.ikhlasstudio.kmitwifi.util.Util;
+import net.ikhlasstudio.kmitlwifi.login.LoginFactory;
+import net.ikhlasstudio.kmitlwifi.login.Loginable;
+import net.ikhlasstudio.kmitlwifi.util.LoginResult;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -16,8 +18,8 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 public class ConnectivityActionReceiver extends BroadcastReceiver {
-    protected static final String LOG_TAG = "KWE-ConnectivityActionReceiver";
-    private Util util;
+
+    protected static final String LOG_TAG = "ConnectivityActionReceiver";
 
     @Override
     public void onReceive(Context context, Intent arg1) {
@@ -31,11 +33,10 @@ public class ConnectivityActionReceiver extends BroadcastReceiver {
             return;
         }
 
-        util = new Util(context);
-        if (!util.isWifiConnect()) {
+        final Loginable Loginner = LoginFactory.getInstance(mcontext);
+        if(Loginner == null){
             return;
         }
-        Log.i(LOG_TAG, "KMITL-WiFi connected");
 
         new Thread(new Runnable() {
 
@@ -48,8 +49,8 @@ public class ConnectivityActionReceiver extends BroadcastReceiver {
 
                 }
                 Log.v(LOG_TAG, "logining to KMITL-WiFi");
-                LoginResult rest = new LoginManager(mcontext).doLogin();
-                if (rest == LoginResult.SUCCESS || rest == LoginResult.ALREADY) {
+                LoginResult result = Loginner.login();
+                if (result == LoginResult.SUCCESS || result == LoginResult.ALREADY) {
                     Intent intent = new Intent(mcontext, MainActivity.class);
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(mcontext)
