@@ -13,7 +13,7 @@ public class LoginFactory {
         String ssid = new Util(context).getWifiSSID();
         Log.v(LOG_TAG, "current SSID: "+ssid);
         
-        if(ssid.startsWith("KMITL-WiFi")){
+        if(ssid.contains("KMITL-WiFi")){
             lg = new KMITLWiFiLogin(context);
         }
         
