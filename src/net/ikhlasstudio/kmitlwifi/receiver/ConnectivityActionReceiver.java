@@ -56,7 +56,8 @@ public class ConnectivityActionReceiver extends BroadcastReceiver {
                             new NotificationCompat.Builder(mcontext)
                                     .setSmallIcon(R.drawable.ic_launcher)
                                     .setContentTitle("KMITL WiFi")
-                                    .setContentText("KMITL WiFi Login success");
+                                    .setContentText("KMITL WiFi Login success")
+                                    .setTicker("KMITL WiFi Login success");
 
                     PendingIntent pending = TaskStackBuilder.create(mcontext)
                             .addParentStack(MainActivity.class)
